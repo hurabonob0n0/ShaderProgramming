@@ -24,6 +24,10 @@ private:
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float *newX, float *newY);
 
+	//lecture2
+public:
+	void DrawTest();
+
 	bool m_Initialized = false;
 	
 	unsigned int m_WindowSizeX = 0;
@@ -31,5 +35,8 @@ private:
 
 	GLuint m_VBORect = 0;
 	GLuint m_SolidRectShader = 0;
+
+	//lecture2
+	GLuint m_VBOTest;
 };
 
