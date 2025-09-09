@@ -1,6 +1,11 @@
 #version 330
 
 in vec3 a_Position;
+in vec4 a_Color;
+
+out vec3 v_Pos;
+out vec4 v_Color;
+
 uniform vec4 u_Trans;
 
 void main()
@@ -10,4 +15,7 @@ void main()
 	newPosition.z = 0;
 	newPosition.w= 1;
 	gl_Position = newPosition;
+
+	v_Color = a_Color;
+	v_Pos = a_Position;
 }
