@@ -39,5 +39,7 @@ public:
 	//lecture2
 	GLuint m_VBOTestColor;
 	GLuint m_VBOTestPos;
+
+	GLuint m_TestShader = 0;
 };
 
