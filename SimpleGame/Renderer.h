@@ -41,5 +41,8 @@ public:
 	GLuint m_VBOTestPos;
 
 	GLuint m_TestShader = 0;
+
+	//Time
+	float m_Time = 0;
 };
 

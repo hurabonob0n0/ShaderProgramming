@@ -49,7 +49,7 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
 	float temp = 0.5f;
-	float size = 0.1f;
+	float size = 0.25f;
 
 	// lecture2
 	float testPos[]
@@ -229,8 +229,12 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 void Renderer::DrawTest()
 {
+	m_Time += 0.016;
 	//Program select
 	glUseProgram(m_TestShader);
+
+	int uTimeloc = glGetUniformLocation(m_TestShader, "u_Time");
+	glUniform1f(uTimeloc, m_Time);
 
 	glUniform4f(glGetUniformLocation(m_TestShader, "u_Trans"),0, 0, 0, 1);
 	glUniform4f(glGetUniformLocation(m_TestShader, "u_Color"), 1, 1,1, 1);
