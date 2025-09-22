@@ -19,9 +19,19 @@ void main()
 	
 	v_Pos = newPosition.xy;
 
-	float xPos = cos(value * c_PI) * a_Radius ;
-	float yPos = sin(value * c_PI)* a_Radius ;
+	float xPos= cos(value * c_PI) * a_Radius;
+	float yPos= sin(value * c_PI)* a_Radius;
 	
+	/*
+	if(a_Radius < 0.7f) {
+		xPos = cos(value * c_PI) * a_Radius ;
+		yPos = sin(value * c_PI)* a_Radius ;
+	}
+	else {
+		xPos = cos(-value * c_PI) * a_Radius ;
+		yPos = sin(-value * c_PI)* a_Radius ;
+	}
+	*/
 	newPosition.xy = newPosition.xy * a_Radius + vec2(xPos ,yPos);
 	
 	gl_Position = newPosition;

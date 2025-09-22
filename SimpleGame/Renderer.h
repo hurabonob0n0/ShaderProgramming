@@ -23,10 +23,12 @@ private:
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float *newX, float *newY);
+	void GenerateParticles(int numParticles);
 
 	//lecture2
 public:
 	void DrawTest();
+	void DrawParticle();
 
 	bool m_Initialized = false;
 	
@@ -39,10 +41,16 @@ public:
 	//lecture2
 	GLuint m_VBOTestColor;
 	GLuint m_VBOTestPos;
+	GLuint m_VBOParticle;
 
 	GLuint m_TestShader = 0;
 
 	//Time
 	float m_Time = 0;
+
+	//particle
+	GLuint m_ParticleShader = 0;
+	GLuint m_VBOParticleVertexCount;
+	
 };
 
