@@ -49,7 +49,7 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
 	float temp = 0.5f;
-	float size = 0.25f;
+	float size = 1.f;
 
 	// lecture2
 	float testPos[]
