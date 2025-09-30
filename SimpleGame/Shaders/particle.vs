@@ -10,7 +10,7 @@ out vec4 v_Color;
 out vec2 v_Pos;
 
 uniform float u_Time;
-uniform vec3;
+uniform vec2 u_MousePos;
 
 const float c_PI = 3.141592f;
 const vec2 c_G = vec2(0,-9.8f * 0.25f);
@@ -19,20 +19,34 @@ void main()
 {
 	float lifeTime = 2.f - a_Color.r * 2.f;
 	float newAlpha = 1.f;
-	float newTime = u_Time * 2.f - a_sTime;
+	float newTime = u_Time - a_sTime;
 	vec4 newPosition = vec4(a_Position,1.f);
 	if(newTime > 0) {
 		float t = fract(newTime/lifeTime) * lifeTime;
 		float tt = t*t;
 		float value = fract(u_Time * 0.025f) * 2.f - 1.f; // -1 ~ 1
 
-	
 		v_Pos = newPosition.xy;
 
 		float xPos= a_velocityXY.x * t;			// cos(value * c_PI) * a_Radius;
 		float yPos= a_velocityXY.y * t + 0.5*c_G.y*tt;	//1 sin(value * c_PI)* a_Radius;
 	
 		newPosition.xy += vec2(xPos ,yPos);//newPosition.xy * a_Radius * 2.f + vec2(xPos ,yPos);
+
+		vec2 curPos = newPosition.xy;
+
+		vec2 toMouse = u_MousePos - curPos;
+
+		float distance = length(toMouse);
+
+		float attractionStrength = 2.f;
+
+		vec2 acceleration = normalize(toMouse) *
+		attractionStrength * max(distance, 0.1f);
+
+		vec2 mouseAttractionOffset = acceleration * tt;
+
+		newPosition.xy += mouseAttractionOffset;
 
 		newAlpha = 1.f - t/lifeTime;
 	}

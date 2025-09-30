@@ -15,8 +15,16 @@ but WITHOUT ANY WARRANTY.
 
 #include "Renderer.h"
 
-Renderer *g_Renderer = NULL;
+Renderer* g_Renderer = NULL;
 bool g_bNeedReloadShaderPrograms = false;
+
+// 1. 마우스 좌표를 저장할 전역 변수 추가
+int g_MouseX = 0;
+int g_MouseY = 0;
+
+int g_WincX = 800;
+int g_WincY = 800;
+
 
 void RenderScene(void)
 {
@@ -32,6 +40,11 @@ void RenderScene(void)
 	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
 	g_Renderer->DrawParticle();
 
+	// 여기서 g_MouseX, g_MouseY를 사용해 원하는 작업을 할 수 있습니다.
+	// 예: 마우스 위치에 사각형 그리기
+	// g_Renderer->DrawSolidRect(g_MouseX, g_MouseY, ...);
+
+
 	glutSwapBuffers();
 }
 
@@ -42,7 +55,7 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
-	
+
 }
 
 void KeyInput(unsigned char key, int x, int y)
@@ -58,16 +71,28 @@ void KeyInput(unsigned char key, int x, int y)
 
 void SpecialKeyInput(int key, int x, int y)
 {
-	
+
 }
 
-int main(int argc, char **argv)
+// 2. 마우스 움직임을 처리할 함수 정의
+void PassiveMotion(int x, int y)
+{
+	// 전역 변수에 현재 마우스 좌표 저장
+	g_MouseX = x;
+	g_MouseY = y;
+
+	// 콘솔에 좌표 출력 (테스트용)
+	// std::cout << "Mouse Position: (" << g_MouseX << ", " << g_MouseY << ")\n";
+}
+
+
+int main(int argc, char** argv)
 {
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(g_WincX, g_WincY);
 	glutCreateWindow("Game Software Engineering KPU");
 
 	glewInit();
@@ -93,10 +118,13 @@ int main(int argc, char **argv)
 	glutMouseFunc(MouseInput);
 	glutSpecialFunc(SpecialKeyInput);
 
+	// 3. main 함수에 콜백 함수 등록
+	glutPassiveMotionFunc(PassiveMotion);
+
+
 	glutMainLoop();
 
 	delete g_Renderer;
 
-    return 0;
+	return 0;
 }
-

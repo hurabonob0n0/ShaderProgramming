@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
+extern int g_MouseX;
+extern int g_MouseY;
+
+extern int g_WincX;
+extern int g_WincY;
+
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
 	Initialize(windowSizeX, windowSizeY);
@@ -320,6 +326,11 @@ void Renderer::DrawParticle()
 	int uTimeloc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeloc, m_Time);
 
+	GLuint uMousPosloc = glGetUniformLocation(shader, "u_MousePos");
+	glUniform2f(uMousPosloc,
+		((float)g_MouseX / (float)g_WincX)*2.f - 1.f,
+		-((g_MouseY / (float)g_WincY)*2.f - 1.f));
+
 	glUniform4f(glGetUniformLocation(shader, "u_Trans"), 0, 0, 0, 1);
 	glUniform4f(glGetUniformLocation(shader, "u_Color"), 1, 1, 1, 1);
 
@@ -330,26 +341,27 @@ void Renderer::DrawParticle()
 	int asVelocityLoc = glGetAttribLocation(shader, "a_velocityXY");
 
 	glEnableVertexAttribArray(aPosLoc);
+	glEnableVertexAttribArray(aRadiusLoc);
+	glEnableVertexAttribArray(aColLoc);
+	glEnableVertexAttribArray(asTimeLoc);
+	glEnableVertexAttribArray(asVelocityLoc);
+
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	glVertexAttribPointer(aPosLoc, 3, GL_FLOAT,
 		GL_FALSE, sizeof(float) * 11, 0);
 
-	glEnableVertexAttribArray(aRadiusLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	glVertexAttribPointer(aRadiusLoc, 1, GL_FLOAT,
 		GL_FALSE, sizeof(float) * 11, (GLvoid*)(sizeof(float) * 3));
 
-	glEnableVertexAttribArray(aColLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	glVertexAttribPointer(aColLoc, 4, GL_FLOAT,
 		GL_FALSE, sizeof(float) * 11, (GLvoid*)(sizeof(float) * 4));
 
-	glEnableVertexAttribArray(asTimeLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	glVertexAttribPointer(asTimeLoc, 1, GL_FLOAT,
 		GL_FALSE, sizeof(float) * 11, (GLvoid*)(sizeof(float) * 8));
 
-	glEnableVertexAttribArray(asVelocityLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	glVertexAttribPointer(asVelocityLoc, 2, GL_FLOAT,
 		GL_FALSE, sizeof(float) * 11, (GLvoid*)(sizeof(float) * 9));
