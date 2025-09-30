@@ -7,7 +7,6 @@ in float a_sTime;
 in vec2 a_velocityXY;
 
 out vec4 v_Color;
-out vec2 v_Pos;
 
 uniform float u_Time;
 uniform vec2 u_MousePos;
@@ -15,7 +14,72 @@ uniform vec2 u_MousePos;
 const float c_PI = 3.141592f;
 const vec2 c_G = vec2(0,-9.8f * 0.25f);
 
-void main()
+void circle()
+{	
+	vec4 centerC = vec4(1.f,0.f,0.f,1.f);
+	vec4 borderC = vec4(1.f,1.f,1.f,0.f);
+	vec4 newColor = a_Color;
+	
+	vec4 newPosition = vec4(a_Position,1.f);
+
+	float lifeTime = 1.f;
+	float newTime = u_Time - a_sTime;
+	
+	if(newTime > 0)
+	{
+	float period = a_velocityXY.x * 1.f;
+
+	float t = fract(newTime/lifeTime) * lifeTime;
+
+	float xPos = t * 2.f -1.f;
+	float yPos = sin(t * c_PI * period) * (a_Radius *2.f -1.f) * sin((xPos+1.f)*0.5f*c_PI);// + a_Position.y;
+
+	// yPos *= sin(fract(newTime/lifeTime*c_PI));
+
+	newPosition.x += xPos;
+	newPosition.y += yPos;
+
+	newColor = mix(centerC,borderC,abs(yPos*3.f));
+	}
+	else
+	{
+	newPosition.xy = vec2(-9999,0);
+	}
+	gl_Position = vec4(newPosition.xyz,1.f);
+	v_Color = vec4(newColor.rgb,lifeTime-t);
+}
+
+
+void wave()
+{	
+	vec4 centerC = vec4(1.f,0.f,0.f,1.f);
+	vec4 borderC = vec4(1.f,1.f,1.f,0.f);
+	vec4 newColor = a_Color;
+	
+	vec4 newPosition = vec4(a_Position,1.f);
+
+	float lifeTime = 1.f;
+	float newTime = u_Time - a_sTime;
+
+	float period = a_velocityXY.x * 1.f;
+
+	float t = fract(newTime/lifeTime) * lifeTime;
+
+	float xPos = t * 2.f -1.f;
+	float yPos = sin(t * c_PI * period) * (a_Radius *2.f -1.f) * sin((xPos+1.f)*0.5f*c_PI);// + a_Position.y;
+
+	// yPos *= sin(fract(newTime/lifeTime*c_PI));
+
+	newPosition.x += xPos;
+	newPosition.y += yPos;
+
+	newColor = mix(centerC,borderC,abs(yPos*3.f));
+
+	gl_Position = vec4(newPosition.xyz,1.f);
+	v_Color = vec4(newColor.rgb,lifeTime-t);
+}
+
+void foundation()
 {
 	float lifeTime = 2.f - a_Color.r * 2.f;
 	float newAlpha = 1.f;
@@ -26,7 +90,7 @@ void main()
 		float tt = t*t;
 		float value = fract(u_Time * 0.025f) * 2.f - 1.f; // -1 ~ 1
 
-		v_Pos = newPosition.xy;
+		//v_Pos = newPosition.xy;
 
 		float xPos= a_velocityXY.x * t;			// cos(value * c_PI) * a_Radius;
 		float yPos= a_velocityXY.y * t + 0.5*c_G.y*tt;	//1 sin(value * c_PI)* a_Radius;
@@ -57,4 +121,11 @@ void main()
 	gl_Position = newPosition;
 
 	v_Color = vec4( a_Color.rgb,newAlpha);
+}
+
+
+void main()
+{
+	//foundation();
+	wave();
 }

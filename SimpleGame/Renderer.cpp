@@ -32,7 +32,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Create VBOs
 	CreateVertexBufferObjects();
 
-	GenerateParticles(3000);
+	GenerateParticles(10000);
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{

@@ -22,8 +22,8 @@ bool g_bNeedReloadShaderPrograms = false;
 int g_MouseX = 0;
 int g_MouseY = 0;
 
-int g_WincX = 800;
-int g_WincY = 800;
+int g_WincX = 500;
+int g_WincY = 500;
 
 
 void RenderScene(void)
