@@ -39,7 +39,7 @@ void main()
 
 		float distance = length(toMouse);
 
-		float attractionStrength = 2.f;
+		float attractionStrength = 1.f;
 
 		vec2 acceleration = normalize(toMouse) *
 		attractionStrength * max(distance, 0.1f);
