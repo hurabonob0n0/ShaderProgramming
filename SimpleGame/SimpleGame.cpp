@@ -38,7 +38,7 @@ void RenderScene(void)
 
 	// Renderer Test
 	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
-	g_Renderer->DrawParticle();
+	g_Renderer->DrawGridMesh();
 
 	// 여기서 g_MouseX, g_MouseY를 사용해 원하는 작업을 할 수 있습니다.
 	// 예: 마우스 위치에 사각형 그리기

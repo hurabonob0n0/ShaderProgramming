@@ -27,12 +27,16 @@ private:
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float *newX, float *newY);
 	void GenerateParticles(int numParticles);
+	void CreateGridMesh(int x, int y);
+
 	
 
 	//lecture2
 public:
 	void DrawTest();
 	void DrawParticle();
+public:
+	void DrawGridMesh();
 
 	bool m_Initialized = false;
 	
@@ -56,8 +60,14 @@ public:
 	GLuint m_ParticleShader = 0;
 	GLuint m_VBOParticleVertexCount;
 
+
 	//practice
 	GLuint m_PracticeShader = 0;
+
+	//GridMesh
+	GLuint m_GridMeshShader = 0;
+	GLuint m_GridMeshVBO;
+	GLuint m_GridMeshVertexCount = 0;
 	
 };
 
