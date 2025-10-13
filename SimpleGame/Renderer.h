@@ -55,6 +55,9 @@ public:
 	//particle
 	GLuint m_ParticleShader = 0;
 	GLuint m_VBOParticleVertexCount;
+
+	//practice
+	GLuint m_PracticeShader = 0;
 	
 };
 

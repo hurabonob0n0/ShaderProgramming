@@ -56,6 +56,7 @@ void Renderer::CompileAllShaderPrograms()
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TestShader = CompileShaders("./Shaders/test.vs", "./Shaders/test.fs");
 	m_ParticleShader = CompileShaders("./Shaders/particle.vs", "./Shaders/particle.fs");
+	m_PracticeShader = CompileShaders("./Shaders/practice.vs", "./Shaders/practice.fs");
 }
 
 void Renderer::DeleteAllShaderPrograms()
@@ -63,6 +64,7 @@ void Renderer::DeleteAllShaderPrograms()
 	glDeleteShader(m_SolidRectShader);
 	glDeleteShader(m_TestShader);
 	glDeleteShader(m_ParticleShader);
+	glDeleteShader(m_PracticeShader);
 }
 
 void Renderer::CreateVertexBufferObjects()
@@ -319,6 +321,7 @@ void Renderer::DrawParticle()
 
 	m_Time += 0.00064f;
 
+	//GLuint shader = m_PracticeShader;
 	GLuint shader = m_ParticleShader;
 	//Program select
 	glUseProgram(shader);
@@ -371,6 +374,10 @@ void Renderer::DrawParticle()
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(aPosLoc);
+	glDisableVertexAttribArray(aRadiusLoc);
+	glDisableVertexAttribArray(aColLoc);
+	glDisableVertexAttribArray(asTimeLoc);
+	glDisableVertexAttribArray(asVelocityLoc);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -396,7 +403,9 @@ void Renderer::GenerateParticles(int numParticles)
 	for (int i = 0; i < numParticles; ++i) {
 		float x, y, z, value, r, g, b, a;
 
-		x = 0.f;//float(rand()) / (float)RAND_MAX * 2 - 1.f;
+		x = float(rand()) / (float)RAND_MAX * 2 - 1.f;
+		x = 0.f;
+		y = float(rand()) / (float)RAND_MAX * 2 - 1.f;
 		y = 0.f;//float(rand()) / (float)RAND_MAX * 2 - 1.f;
 		z = 0.f;
 
@@ -405,12 +414,12 @@ void Renderer::GenerateParticles(int numParticles)
 		r = float(rand()) / (float)RAND_MAX;
 		g = float(rand()) / (float)RAND_MAX;
 		b = float(rand()) / (float)RAND_MAX;
-		a = float(rand()) / (float)RAND_MAX;
+		a = 1.f; //float(rand()) / (float)RAND_MAX;
 
 		float size;
 		size = (float(rand()) / (float)RAND_MAX) * 0.01f;
 
-		float sTime = (float(rand()) / (float)RAND_MAX) * 2.f;
+		float sTime = (float(rand()) / (float)RAND_MAX) * 5.f;
 
 		float vx = ((float(rand()) / (float)RAND_MAX) * 1.f - 0.5f);
 		float vy = (((float(rand()) / (float)RAND_MAX) * 0.5f + 0.5f) + 0.5f) * 1.f;
