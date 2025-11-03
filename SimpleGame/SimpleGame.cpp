@@ -22,8 +22,8 @@ bool g_bNeedReloadShaderPrograms = false;
 int g_MouseX = 0;
 int g_MouseY = 0;
 
-int g_WincX = 500;
-int g_WincY = 500;
+int g_WincX = 1000;
+int g_WincY = 1000;
 
 
 void RenderScene(void)
@@ -33,17 +33,13 @@ void RenderScene(void)
 		g_bNeedReloadShaderPrograms = false;
 	}
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	g_Renderer->DrawFullScreen(0.f,0.f,0.f,0.2f);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	// Renderer Test
-	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
 	g_Renderer->DrawGridMesh();
 
-	// 여기서 g_MouseX, g_MouseY를 사용해 원하는 작업을 할 수 있습니다.
-	// 예: 마우스 위치에 사각형 그리기
-	// g_Renderer->DrawSolidRect(g_MouseX, g_MouseY, ...);
-
+	//g_Renderer->DrawParticle();
 
 	glutSwapBuffers();
 }
@@ -106,7 +102,7 @@ int main(int argc, char** argv)
 	}
 
 	// Initialize Renderer
-	g_Renderer = new Renderer(500, 500);
+	g_Renderer = new Renderer(g_WincX, g_WincY);
 	if (!g_Renderer->IsInitialized())
 	{
 		std::cout << "Renderer could not be initialized.. \n";

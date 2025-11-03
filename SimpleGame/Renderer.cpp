@@ -23,19 +23,32 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_WindowSizeX = windowSizeX;
 	m_WindowSizeY = windowSizeY;
 
+	glDisable(GL_CULL_FACE);
+
 	//Load shaders
-	/*m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	m_TestShader = CompileShaders("./Shaders/test.vs", "./Shaders/test.fs");
-	m_ParticleShader = CompileShaders("./Shaders/particle.vs", "./Shaders/particle.fs");*/
 	CompileAllShaderPrograms();
-	
+
 	//Create VBOs
 	CreateVertexBufferObjects();
+	CreateVertexBufferObjectsFullScreen();
 
 	//Create Grid Mesh
-	CreateGridMesh(100, 100);
+	CreateGridMesh(1000, 1000);
 
 	GenerateParticles(10000);
+
+	//For Points
+	int index = 0;
+	for (int i = 0; i < 100; ++i) {
+		float x = (float)rand() / RAND_MAX * 2.f - 1.f;
+		float y = (float)rand() / RAND_MAX * 2.f - 1.f;
+		float st = 10 *(float)rand() / RAND_MAX;
+		float lt = (float)rand() / RAND_MAX;
+		m_Points[index] = x; index++;
+		m_Points[index] = y; index++;
+		m_Points[index] = st; index++;
+		m_Points[index] = lt; index++;
+	}
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -61,6 +74,7 @@ void Renderer::CompileAllShaderPrograms()
 	m_ParticleShader = CompileShaders("./Shaders/particle.vs", "./Shaders/particle.fs");
 	m_PracticeShader = CompileShaders("./Shaders/practice.vs", "./Shaders/practice.fs");
 	m_GridMeshShader = CompileShaders("./Shaders/GridMesh.vs", "./Shaders/GridMesh.fs");
+	m_FullScreenShader = CompileShaders("./Shaders/FullScreen.vs", "./Shaders/FullScreen.fs");
 }
 
 void Renderer::DeleteAllShaderPrograms()
@@ -69,6 +83,8 @@ void Renderer::DeleteAllShaderPrograms()
 	glDeleteShader(m_TestShader);
 	glDeleteShader(m_ParticleShader);
 	glDeleteShader(m_PracticeShader);
+	glDeleteShader(m_FullScreenShader);
+	glDeleteShader(m_GridMeshShader);
 }
 
 void Renderer::CreateVertexBufferObjects()
@@ -516,13 +532,13 @@ void Renderer::CreateGridMesh(int x, int y)
 
 {
 
-	float basePosX = -0.5f * 2.f;
+	float basePosX = -1.f;
 
-	float basePosY = -0.5f * 2.f;
+	float basePosY = -1.f;
 
-	float targetPosX = 0.5f * 2.f;
+	float targetPosX = 1.f;
 
-	float targetPosY = 0.5f * 2.f;
+	float targetPosY = 1.f;
 
 
 
@@ -681,21 +697,67 @@ void Renderer::DrawGridMesh()
 	//Program select
 	glUseProgram(shader);
 
-	m_Time += 0.00064f;
+	m_Time += 0.016 * 0.1f;
 
 	int uTimeloc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeloc, m_Time);
+
+	int uPointsLoc = glGetUniformLocation(shader,
+		"u_Points");
+	glUniform4fv(uPointsLoc, 100, m_Points);
 
 	int attribPosition = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
 	glBindBuffer(GL_ARRAY_BUFFER, m_GridMeshVBO);
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
-	//glDrawArrays(GL_TRIANGLES, 0, m_GridMeshVertexCount);
+	glDrawArrays(GL_TRIANGLES, 0, m_GridMeshVertexCount);
 
-	glDrawArrays(GL_LINE_STRIP, 0, m_GridMeshVertexCount);
+	//glDrawArrays(GL_LINE_STRIP, 0, m_GridMeshVertexCount);
 
 	glDisableVertexAttribArray(attribPosition);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::CreateVertexBufferObjectsFullScreen()
+{
+	float rect[] =
+	{
+		-1.f, -1.f, 0.f,
+		 1.f, -1.f, 0.f,
+		 1.f,  1.f, 0.f, // Triangle 1
+
+		-1.f, -1.f, 0.f,
+		 1.f,  1.f, 0.f,
+		-1.f,  1.f, 0.f  // Triangle 2
+	};
+
+	glGenBuffers(1, &m_VBOFullScreen);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFullScreen);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+}
+
+void Renderer::DrawFullScreen(float r, float g, float b, float a)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//Program select
+	glUseProgram(m_FullScreenShader);
+
+	glUniform4f(glGetUniformLocation(m_FullScreenShader, "u_Color"), r, g, b, a);
+
+	int attribPosition = glGetAttribLocation(m_FullScreenShader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFullScreen);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attribPosition);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//glDisable(GL_BLEND);
 }

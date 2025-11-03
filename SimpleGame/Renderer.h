@@ -38,6 +38,14 @@ public:
 public:
 	void DrawGridMesh();
 
+
+	//FullScreen
+public:
+	void CreateVertexBufferObjectsFullScreen();
+
+	void DrawFullScreen(float r, float g, float b, float a);
+
+
 	bool m_Initialized = false;
 	
 	unsigned int m_WindowSizeX = 0;
@@ -69,5 +77,12 @@ public:
 	GLuint m_GridMeshVBO;
 	GLuint m_GridMeshVertexCount = 0;
 	
+
+	//Full Screen
+	GLuint m_VBOFullScreen = 0;
+	GLuint m_FullScreenShader = 0;
+
+	//For raindrop effect
+	float m_Points[100 * 4];
 };
 
