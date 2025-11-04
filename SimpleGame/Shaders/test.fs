@@ -8,8 +8,5 @@ in vec2 v_Pos;
 void main()
 {
 	//FragColor = v_Color;
-	if(length(v_Pos) > 0.5f){
-		discard;
-	}
 	FragColor = vec4(0.9f,0.1f,0.1f,1.f);
 }
